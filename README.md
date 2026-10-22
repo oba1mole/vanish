@@ -138,6 +138,11 @@ VITE_SUPABASE_ANON_KEY
 
 Redeploy after adding the variables.
 
+The website can display without messaging configuration. If either variable is
+missing, creating or opening a message shows a temporary-unavailability error
+instead of preventing the entire application from starting. Messaging requires
+both variables and the Supabase backend setup described above.
+
 ---
 
 # Security properties
