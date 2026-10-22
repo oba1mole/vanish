@@ -1,4 +1,4 @@
-import { supabase } from "./supabase";
+import { getMessagingConfig, getSupabase } from "./supabase";
 import {
   encryptMessage
 } from "./crypto";
@@ -41,6 +41,7 @@ export async function createBurnMessage(
   }
 
   try {
+    const supabase = getSupabase();
     const encrypted = await encryptMessage(plaintext);
 
     const expiresAt = new Date(
@@ -82,16 +83,17 @@ export async function createBurnMessage(
 
 
 async function consumeBurnMessageOnce(messageId) {
+  const { url, anonKey } = getMessagingConfig();
   const functionUrl =
-    `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/consume-message`;
+    `${url}/functions/v1/consume-message`;
 
   const response = await fetch(functionUrl, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      apikey: import.meta.env.VITE_SUPABASE_ANON_KEY,
+      apikey: anonKey,
       Authorization:
-        `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`
+        `Bearer ${anonKey}`
     },
     body: JSON.stringify({ id: messageId }),
     cache: "no-store"
